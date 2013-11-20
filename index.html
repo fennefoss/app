@@ -9,16 +9,95 @@
 <!-- This reference to phonegap.js will allow for code hints as long as the current site has been configured as a mobile application. 
 	 To configure the site as a mobile application, go to Site -> Mobile Applications -> Configure Application Framework... -->
 <script src="/phonegap.js" type="text/javascript"></script>
-</head> 
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(-34.397, 150.644),
+          zoom: 8
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+	  
+	  
+var map;
+
+function initialize() {
+  var mapOptions = {
+    zoom: 6
+  };
+  map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  // Try HTML5 geolocation
+  if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var pos = new google.maps.LatLng(position.coords.latitude,
+                                       position.coords.longitude);
+
+      var infowindow = new google.maps.InfoWindow({
+        map: map,
+        position: pos,
+        content: 'Location found using HTML5.'
+      });
+
+      map.setCenter(pos);
+    }, function() {
+      handleNoGeolocation(true);
+    });
+  } else {
+    // Browser doesn't support Geolocation
+    handleNoGeolocation(false);
+  }
+}
+
+function handleNoGeolocation(errorFlag) {
+  if (errorFlag) {
+    var content = 'Error: The Geolocation service failed.';
+  } else {
+    var content = 'Error: Your browser doesn\'t support geolocation.';
+  }
+
+  var options = {
+    map: map,
+    position: new google.maps.LatLng(60, 105),
+    content: content
+  };
+
+  var infowindow = new google.maps.InfoWindow(options);
+  map.setCenter(options.position);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+	  
+</script>
+<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+			}
+	
+      #map-canvas {
+		   height: 480px;
+		   width: 320px;
+		   float: left;
+	   }
+    </style>
+</head>
 <body> 
 
 <div data-role="page" id="page">
 	<div data-role="header">
 		<h1>Page One</h1>
 	</div>
-	<div data-role="content">	
+	<div data-role="content">
+    
+    <div id="map-canvas"></div>
+    
 		<ul data-role="listview">
-			<li><a href="#page2">Page Two</a></li>
+			<li><a href="#page2">Map</a></li>
             <li><a href="#page3">Page Three</a></li>
 			<li><a href="#page4">Page Four</a></li>
 		</ul>		
@@ -30,48 +109,10 @@
 
 <div data-role="page" id="page2">
 	<div data-role="header">
-		<h1>Page Two</h1>
+		<h1>Map</h1>
 	</div>
 	<div data-role="content">	
 		
-        
-        
-    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
-    <script type="text/javascript" charset="utf-8">
-
-    // Wait for device API libraries to load
-    //
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    // device APIs are available
-    //
-    function onDeviceReady() {
-        navigator.geolocation.getCurrentPosition(onSuccess, onError);
-    }
-
-    // onSuccess Geolocation
-    //
-    function onSuccess(position) {
-        var element = document.getElementById('geolocation');
-        element.innerHTML = 'Latitude: '           + position.coords.latitude              + '<br />' +
-                            'Longitude: '          + position.coords.longitude             + '<br />' +
-                            'Altitude: '           + position.coords.altitude              + '<br />' +
-                            'Accuracy: '           + position.coords.accuracy              + '<br />' +
-                            'Altitude Accuracy: '  + position.coords.altitudeAccuracy      + '<br />' +
-                            'Heading: '            + position.coords.heading               + '<br />' +
-                            'Speed: '              + position.coords.speed                 + '<br />' +
-                            'Timestamp: '          + position.timestamp                    + '<br />';
-    }
-
-    // onError Callback receives a PositionError object
-    //
-    function onError(error) {
-        alert('code: '    + error.code    + '\n' +
-              'message: ' + error.message + '\n');
-    }
-
-    </script>
-        
         
 	</div>
 	<div data-role="footer">
